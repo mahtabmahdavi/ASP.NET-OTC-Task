@@ -1,6 +1,15 @@
+using GroceryStore.Data;
+using Microsoft.EntityFrameworkCore;
+using GroceryStore.Repositories.Interfaces;
+using GroceryStore.Repositories;
+using GroceryStore.Services.Interfaces;
+using GroceryStore.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddScoped<IEntityRepository, EntityRepository>();
+builder.Services.AddScoped<IGroceryService, GroceryService>();
 builder.Services.AddControllers();
 
 // configuring Swagger/OpenAPI at

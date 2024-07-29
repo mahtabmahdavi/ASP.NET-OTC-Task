@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GroceryStore.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace GroceryStore.Data
 {
@@ -7,5 +8,7 @@ namespace GroceryStore.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
+
+        public DbSet<Entity> Entities { get; set; }
     }
 }
