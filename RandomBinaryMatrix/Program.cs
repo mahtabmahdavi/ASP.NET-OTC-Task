@@ -6,6 +6,8 @@ class SparseMatrix
     static void Main()
     {
         int[,] matrix = GenerateRandomMatrix(100, 100);
+        PrintMatrix(matrix);
+        
         HashSet<(int, int)> onesSet = GetOnesPosition(matrix);
 
         var closestMatrix = FindClosest3x3MatrixWithAllOnes(matrix, onesSet);
@@ -13,6 +15,7 @@ class SparseMatrix
         if (closestMatrix.HasValue)
         {
             Console.WriteLine($"The nearest 3x3 matrix with all ones is located at position ({closestMatrix.Value.x}, {closestMatrix.Value.y}).");
+            Print3x3Matrix(closestMatrix.Value.x, closestMatrix.Value.y);
         }
         else
         {
@@ -34,6 +37,18 @@ class SparseMatrix
         return matrix;
     }
 
+    static void PrintMatrix(int[,] matrix)
+    {
+        for (int i = 0; i < matrix.GetLength(0); i++)
+        {
+            for (int j = 0; j < matrix.GetLength(1); j++)
+            {
+                Console.Write(matrix[i, j] + " ");
+            }
+            Console.WriteLine();
+        }
+    }
+    
     static HashSet<(int, int)> GetOnesPosition(int[,] matrix)
     {
         HashSet<(int, int)> onesSet = new HashSet<(int, int)>();
@@ -87,5 +102,18 @@ class SparseMatrix
             }
         }
         return true;
+    }
+    
+    static void Print3x3Matrix(int startX, int startY)
+    {
+        Console.WriteLine("The 3x3 matrix is:");
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                Console.Write((startX + i, startY + j) + " ");
+            }
+            Console.WriteLine();
+        }
     }
 }
