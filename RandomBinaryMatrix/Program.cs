@@ -26,5 +26,48 @@ class SparseMatrix
                 }
             }
         }
+        
+        (int, int)? result = null;
+        int minDistance = int.MaxValue;
+
+        for (int i = 0; i <= 97; i++)
+        {
+            for (int j = 0; j <= 97; j++)
+            {
+                if (Is3x3MatrixAllOnes(matrix, i, j, onesSet))
+                {
+                    int distance = i + j;
+                    if (distance < minDistance)
+                    {
+                        minDistance = distance;
+                        result = (i, j);
+                    }
+                }
+            }
+        }
+
+        if (result.HasValue)
+        {
+            Console.WriteLine($"The nearest 3x3 matrix with all ones is located at position ({result.Value.Item1}, {result.Value.Item2}).");
+        }
+        else
+        {
+            Console.WriteLine("No 3x3 matrix with all ones was found.");
+        }
+    }
+    
+    static bool Is3x3MatrixAllOnes(int[,] matrix, int x, int y, HashSet<(int, int)> onesSet)
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                if (!onesSet.Contains((x + i, y + j)))
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
