@@ -1,4 +1,5 @@
-﻿using GroceryStore.Services.Interfaces;
+﻿using GroceryStore.Models;
+using GroceryStore.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GroceryStore.Controllers

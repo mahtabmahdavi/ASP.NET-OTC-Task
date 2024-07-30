@@ -8,11 +8,12 @@ using GroceryStore.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddMemoryCache();
 builder.Services.AddScoped<IEntityRepository, EntityRepository>();
 builder.Services.AddScoped<IGroceryService, GroceryService>();
 builder.Services.AddControllers();
 
-// configuring Swagger/OpenAPI at
+// Configure Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

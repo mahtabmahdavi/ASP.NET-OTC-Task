@@ -1,4 +1,4 @@
-﻿namespace GroceryStore.Models
+﻿namespace GroceryStore.Models.Entities
 {
     public class Entity
     {
