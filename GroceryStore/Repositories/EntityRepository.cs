@@ -19,6 +19,11 @@ namespace GroceryStore.Repositories
                 .FirstOrDefaultAsync(e => e.Name == name && e.FetchDate.Date == date.Date);
         }
 
+        public async Task<IEnumerable<Entity>> GetEntitiesByDateAsync(DateTime date)
+        {
+            return await _context.Entities.Where(e => e.FetchDate.Date == date.Date).ToListAsync();
+        }
+
         public async Task AddEntitiesAsync(IEnumerable<Entity> entities)
         {
             _context.Entities.AddRange(entities);

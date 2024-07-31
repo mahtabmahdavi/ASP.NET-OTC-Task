@@ -19,21 +19,37 @@ namespace GroceryStore.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<IActionResult> AddEntities([FromBody] IEnumerable<EntityDto> entities)
+        public async Task<IActionResult> AddEntities([FromBody] IEnumerable<EntityRequestDto> entities)
         {
             if (entities == null || !entities.Any())
             {
-                return BadRequest("Entities list cannot be null or empty!");
+                return BadRequest(new { message = "Entities list cannot be null or empty!" });
             }
 
             try
             {
                 await _groceryService.AddNewEntitiesAsync(entities);
-                return Ok("Entities added successfully.");
+                return Ok(new { message = "Entities added successfully." });
             }
             catch (InvalidOperationException ex)
             {
                 return Conflict(new { message = ex.Message });
+            }
+        }
+
+        [HttpGet("changed-prices")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        public async Task<IActionResult> GetChangedPrices()
+        {
+            try
+            {
+                var changedPrices = await _groceryService.GetChangedPricesAsync();
+                return Ok(changedPrices);
+            }
+            catch (Exception ex)
+            {
+                return UnprocessableEntity(new { message = "A logical error occurred.", details = ex.Message });
             }
         }
     }
