@@ -19,7 +19,7 @@ namespace GroceryStore.Services
             _memoryCache = memoryCache;
         }
 
-        public async Task AddNewEntitiesAsync(IEnumerable<EntityRequestDto> entities)
+        public async Task AddNewEntitiesAsync(IEnumerable<EntityDto> entities)
         {
             var today = DateTime.Now.Date;
             var entitiesToAdd = new List<Entity>();
@@ -45,7 +45,7 @@ namespace GroceryStore.Services
                 await _entityRepository.AddEntitiesAsync(entitiesToAdd);
         }
 
-        public async Task<IEnumerable<EntityResponseDto>> GetChangedPricesAsync()
+        public async Task<IEnumerable<EntityServiceResponseDto>> GetChangedPricesAsync()
         {
             var yesterdayEntities = await GetEntitiesByDateWithCacheAsync(DateTime.Now.AddDays(-1).Date);
             var todayEntities = await GetEntitiesByDateWithCacheAsync(DateTime.Now.Date);
@@ -53,9 +53,19 @@ namespace GroceryStore.Services
             var yesterdayDict = yesterdayEntities.ToDictionary(e => e.Name, e => e.Price);
             var todayDict = todayEntities.ToDictionary(e => e.Name);
 
-            return ConvertEntitiesToDto(todayDict
+            return ConvertEntitiesToChangeDto(todayDict
                 .Where(kvp => yesterdayDict.ContainsKey(kvp.Key) && yesterdayDict[kvp.Key] != kvp.Value.Price)
                 .Select(kvp => kvp.Value), yesterdayDict);
+        }
+
+        public async Task<IEnumerable<Entity>> GetRemovedEntitiesAsync()
+        {
+            var yesterdayEntities = await GetEntitiesByDateWithCacheAsync(DateTime.Now.AddDays(-1).Date);
+            var todayEntities = await GetEntitiesByDateWithCacheAsync(DateTime.Now.Date);
+
+            var todayDict = todayEntities.ToDictionary(e => e.Name);
+
+            return yesterdayEntities.Where(e => !todayDict.ContainsKey(e.Name));
         }
 
         private async Task<bool> IsEntityExistingForTodayAsync(string name, DateTime date)
@@ -87,9 +97,10 @@ namespace GroceryStore.Services
             return entities;
         }
 
-        private IEnumerable<EntityResponseDto> ConvertEntitiesToDto(IEnumerable<Entity> entities, Dictionary<string, double> previousPrices)
+        private IEnumerable<EntityServiceResponseDto> ConvertEntitiesToChangeDto(
+            IEnumerable<Entity> entities, Dictionary<string, double> previousPrices)
         {
-            return entities.Select(entity => new EntityResponseDto
+            return entities.Select(entity => new EntityServiceResponseDto
             {
                 EntityId = entity.EntityId,
                 Name = entity.Name,

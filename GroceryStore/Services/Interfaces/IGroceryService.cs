@@ -5,7 +5,8 @@ namespace GroceryStore.Services.Interfaces
 {
     public interface IGroceryService
     {
-        Task AddNewEntitiesAsync(IEnumerable<EntityRequestDto> entities);
-        Task<IEnumerable<EntityResponseDto>> GetChangedPricesAsync();
+        Task AddNewEntitiesAsync(IEnumerable<EntityDto> entities);
+        Task<IEnumerable<EntityServiceResponseDto>> GetChangedPricesAsync();
+        Task<IEnumerable<Entity>> GetRemovedEntitiesAsync();
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace GroceryStore.Models.Dtos
 {
-    public class EntityResponseDto
+    public class EntityServiceResponseDto
     {
         public Guid EntityId { get; set; }
         public string Name { get; set; }

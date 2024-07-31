@@ -1,6 +1,6 @@
 ﻿namespace GroceryStore.Models.Dtos
 {
-    public class EntityRequestDto
+    public class EntityDto
     {
         public string Name { get; set; }
         public string Description { get; set; }

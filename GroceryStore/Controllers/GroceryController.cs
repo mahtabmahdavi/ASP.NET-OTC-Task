@@ -19,7 +19,7 @@ namespace GroceryStore.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<IActionResult> AddEntities([FromBody] IEnumerable<EntityRequestDto> entities)
+        public async Task<IActionResult> AddEntities([FromBody] IEnumerable<EntityDto> entities)
         {
             if (entities == null || !entities.Any())
             {
@@ -44,8 +44,24 @@ namespace GroceryStore.Controllers
         {
             try
             {
-                var changedPrices = await _groceryService.GetChangedPricesAsync();
-                return Ok(changedPrices);
+                var changedEntities = await _groceryService.GetChangedPricesAsync();
+                return Ok(changedEntities);
+            }
+            catch (Exception ex)
+            {
+                return UnprocessableEntity(new { message = "A logical error occurred.", details = ex.Message });
+            }
+        }
+
+        [HttpGet("removed-entities")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        public async Task<IActionResult> GetRemovedEntities()
+        {
+            try
+            {
+                var removedEntities = await _groceryService.GetRemovedEntitiesAsync();
+                return Ok(removedEntities);
             }
             catch (Exception ex)
             {
