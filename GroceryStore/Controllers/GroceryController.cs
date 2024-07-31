@@ -68,5 +68,21 @@ namespace GroceryStore.Controllers
                 return UnprocessableEntity(new { message = "A logical error occurred.", details = ex.Message });
             }
         }
+
+        [HttpGet("added-entities")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        public async Task<IActionResult> GetAddedEntities()
+        {
+            try
+            {
+                var addedEntities = await _groceryService.GetAddedEntitiesAsync();
+                return Ok(addedEntities);
+            }
+            catch (Exception ex)
+            {
+                return UnprocessableEntity(new { message = "A logical error occurred.", details = ex.Message });
+            }
+        }
     }
 }

@@ -68,6 +68,16 @@ namespace GroceryStore.Services
             return yesterdayEntities.Where(e => !todayDict.ContainsKey(e.Name));
         }
 
+        public async Task<IEnumerable<Entity>> GetAddedEntitiesAsync()
+        {
+            var yesterdayEntities = await GetEntitiesByDateWithCacheAsync(DateTime.Now.AddDays(-1).Date);
+            var todayEntities = await GetEntitiesByDateWithCacheAsync(DateTime.Now.Date);
+
+            var yesterdayDict = yesterdayEntities.ToDictionary(e => e.Name);
+
+            return todayEntities.Where(e => !yesterdayDict.ContainsKey(e.Name));
+        }
+
         private async Task<bool> IsEntityExistingForTodayAsync(string name, DateTime date)
         {
             var cacheKey = $"{EntitiesCacheKeyPrefix}{name}_{date:yyyyMMdd}";
