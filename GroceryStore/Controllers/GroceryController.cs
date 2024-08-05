@@ -39,7 +39,7 @@ namespace GroceryStore.Controllers
 
         [HttpGet("changed-prices")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetChangedPrices()
         {
             try
@@ -49,13 +49,13 @@ namespace GroceryStore.Controllers
             }
             catch (Exception ex)
             {
-                return UnprocessableEntity(new { message = "A logical error occurred.", details = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "A logical error occurred." });
             }
         }
 
         [HttpGet("removed-entities")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetRemovedEntities()
         {
             try
@@ -65,13 +65,13 @@ namespace GroceryStore.Controllers
             }
             catch (Exception ex)
             {
-                return UnprocessableEntity(new { message = "A logical error occurred.", details = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "A logical error occurred." });
             }
         }
 
         [HttpGet("added-entities")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAddedEntities()
         {
             try
@@ -81,7 +81,7 @@ namespace GroceryStore.Controllers
             }
             catch (Exception ex)
             {
-                return UnprocessableEntity(new { message = "A logical error occurred.", details = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "A logical error occurred." });
             }
         }
     }
