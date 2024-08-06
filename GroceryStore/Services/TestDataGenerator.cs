@@ -1,7 +1,7 @@
 ﻿using GroceryStore.Models.Entities;
 using GroceryStore.Repositories.Interfaces;
 
-namespace GroceryStore.Data
+namespace GroceryStore.Services
 {
     public class TestDataGenerator
     {

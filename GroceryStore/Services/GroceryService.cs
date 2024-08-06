@@ -62,8 +62,17 @@ namespace GroceryStore.Services
                 })
                 .Select(kvp => kvp.Value);
 
-            var removedEntities = yesterdayEntities.Where(e => !todayDict.ContainsKey(e.Name));
-            var addedEntities = todayEntities.Where(e => !yesterdayDict.ContainsKey(e.Name));
+            var removedEntities = yesterdayEntities
+                .Where(e =>
+                {
+                    return !todayDict.TryGetValue(e.Name, out _);
+                });
+
+            var addedEntities = todayEntities
+                .Where(e =>
+                {
+                    return !yesterdayDict.TryGetValue(e.Name, out _);
+                });
             
             return new EntityServiceResponseDto
             {
@@ -107,7 +116,6 @@ namespace GroceryStore.Services
         {
             return entities.Select(entity => new ChangedPriceEntityDto
             {
-                EntityId = entity.EntityId,
                 Name = entity.Name,
                 PriceDifferential = previousPrices.ContainsKey(entity.Name)
                                     ? entity.Price - previousPrices[entity.Name]

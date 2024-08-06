@@ -16,12 +16,17 @@ namespace GroceryStore.Repositories
         public async Task<Entity> GetEntityByNameAndDateAsync(string name, DateTime date)
         {
             return await _context.Entities
-                .FirstOrDefaultAsync(e => e.Name == name && e.FetchDate.Date == date.Date);
+                .AsNoTracking()
+                .Where(e => e.Name == name && e.FetchDate.Date == date.Date)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<Entity>> GetEntitiesByDateAsync(DateTime date)
         {
-            return await _context.Entities.Where(e => e.FetchDate.Date == date.Date).ToListAsync();
+            return await _context.Entities
+                .Where(e => e.FetchDate.Date == date.Date)
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task AddEntitiesAsync(IEnumerable<Entity> entities)

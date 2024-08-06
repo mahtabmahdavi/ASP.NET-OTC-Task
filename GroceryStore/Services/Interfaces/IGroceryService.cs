@@ -1,5 +1,4 @@
 ﻿using GroceryStore.Models.Dtos;
-using GroceryStore.Models.Entities;
 
 namespace GroceryStore.Services.Interfaces
 {

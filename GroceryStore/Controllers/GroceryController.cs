@@ -1,5 +1,5 @@
-﻿using GroceryStore.Data;
-using GroceryStore.Models.Dtos;
+﻿using GroceryStore.Models.Dtos;
+using GroceryStore.Services;
 using GroceryStore.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
