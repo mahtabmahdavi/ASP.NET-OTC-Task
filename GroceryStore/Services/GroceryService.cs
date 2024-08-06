@@ -54,7 +54,12 @@ namespace GroceryStore.Services
             var todayDict = todayEntities.ToDictionary(e => e.Name);
 
             var changedPrices = todayDict
-                .Where(kvp => yesterdayDict.ContainsKey(kvp.Key) && yesterdayDict[kvp.Key] != kvp.Value.Price)
+                .Where(kvp =>
+                {
+                    if (yesterdayDict.TryGetValue(kvp.Key, out var yesterdayPrice))
+                        return yesterdayPrice != kvp.Value.Price;
+                    return false;
+                })
                 .Select(kvp => kvp.Value);
 
             var removedEntities = yesterdayEntities.Where(e => !todayDict.ContainsKey(e.Name));
