@@ -11,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddMemoryCache();
 builder.Services.AddScoped<IEntityRepository, EntityRepository>();
 builder.Services.AddScoped<IGroceryService, GroceryService>();
+builder.Services.AddScoped<TestDataGenerator>();
 builder.Services.AddControllers();
 
 // Configure Swagger/OpenAPI
