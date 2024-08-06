@@ -45,7 +45,7 @@ namespace GroceryStore.Services
                 await _entityRepository.AddEntitiesAsync(entitiesToAdd);
         }
 
-        public async Task<IEnumerable<EntityServiceResponseDto>> GetChangedPricesAsync()
+        public async Task<EntityServiceResponseDto> GetComparisonAsync()
         {
             var yesterdayEntities = await GetEntitiesByDateWithCacheAsync(DateTime.Now.AddDays(-1).Date);
             var todayEntities = await GetEntitiesByDateWithCacheAsync(DateTime.Now.Date);
@@ -53,29 +53,19 @@ namespace GroceryStore.Services
             var yesterdayDict = yesterdayEntities.ToDictionary(e => e.Name, e => e.Price);
             var todayDict = todayEntities.ToDictionary(e => e.Name);
 
-            return ConvertEntitiesToChangeDto(todayDict
+            var changedPrices = todayDict
                 .Where(kvp => yesterdayDict.ContainsKey(kvp.Key) && yesterdayDict[kvp.Key] != kvp.Value.Price)
-                .Select(kvp => kvp.Value), yesterdayDict);
-        }
+                .Select(kvp => kvp.Value);
 
-        public async Task<IEnumerable<Entity>> GetRemovedEntitiesAsync()
-        {
-            var yesterdayEntities = await GetEntitiesByDateWithCacheAsync(DateTime.Now.AddDays(-1).Date);
-            var todayEntities = await GetEntitiesByDateWithCacheAsync(DateTime.Now.Date);
-
-            var todayDict = todayEntities.ToDictionary(e => e.Name);
-
-            return yesterdayEntities.Where(e => !todayDict.ContainsKey(e.Name));
-        }
-
-        public async Task<IEnumerable<Entity>> GetAddedEntitiesAsync()
-        {
-            var yesterdayEntities = await GetEntitiesByDateWithCacheAsync(DateTime.Now.AddDays(-1).Date);
-            var todayEntities = await GetEntitiesByDateWithCacheAsync(DateTime.Now.Date);
-
-            var yesterdayDict = yesterdayEntities.ToDictionary(e => e.Name);
-
-            return todayEntities.Where(e => !yesterdayDict.ContainsKey(e.Name));
+            var removedEntities = yesterdayEntities.Where(e => !todayDict.ContainsKey(e.Name));
+            var addedEntities = todayEntities.Where(e => !yesterdayDict.ContainsKey(e.Name));
+            
+            return new EntityServiceResponseDto
+            {
+                ChangedPriceEntities = ConvertEntitiesToChangedPriceEntityDto(changedPrices, yesterdayDict),
+                RemovedEntities = ConvertEntitiesToEntityDto(removedEntities),
+                AddedEntities = ConvertEntitiesToEntityDto(addedEntities)
+            };
         }
 
         private async Task<bool> IsEntityExistingForTodayAsync(string name, DateTime date)
@@ -107,16 +97,26 @@ namespace GroceryStore.Services
             return entities;
         }
 
-        private IEnumerable<EntityServiceResponseDto> ConvertEntitiesToChangeDto(
+        private static IEnumerable<ChangedPriceEntityDto> ConvertEntitiesToChangedPriceEntityDto(
             IEnumerable<Entity> entities, Dictionary<string, double> previousPrices)
         {
-            return entities.Select(entity => new EntityServiceResponseDto
+            return entities.Select(entity => new ChangedPriceEntityDto
             {
                 EntityId = entity.EntityId,
                 Name = entity.Name,
                 PriceDifferential = previousPrices.ContainsKey(entity.Name)
                                     ? entity.Price - previousPrices[entity.Name]
                                     : entity.Price
+            });
+        }
+
+        private static IEnumerable<EntityDto> ConvertEntitiesToEntityDto(IEnumerable<Entity> entities)
+        {
+            return entities.Select(entity => new EntityDto
+            {
+                Name = entity.Name,
+                Price = entity.Price,
+                Description = entity.Description
             });
         }
     }

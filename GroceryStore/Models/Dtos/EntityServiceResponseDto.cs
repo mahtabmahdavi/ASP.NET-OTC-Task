@@ -2,8 +2,8 @@
 {
     public class EntityServiceResponseDto
     {
-        public Guid EntityId { get; set; }
-        public string Name { get; set; }
-        public double PriceDifferential{ get; set; }
+        public IEnumerable<ChangedPriceEntityDto> ChangedPriceEntities { get; set; }
+        public IEnumerable<EntityDto> RemovedEntities { get; set; }
+        public IEnumerable<EntityDto> AddedEntities { get; set; }
     }
 }

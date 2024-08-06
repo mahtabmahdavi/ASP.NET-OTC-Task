@@ -23,7 +23,7 @@ namespace GroceryStore.Controllers
         {
             if (entities == null || !entities.Any())
             {
-                return BadRequest(new { message = "Entities list cannot be null or empty!" });
+                return BadRequest(new { message = "Entity list cannot be null or empty!" });
             }
 
             try
@@ -37,47 +37,15 @@ namespace GroceryStore.Controllers
             }
         }
 
-        [HttpGet("changed-prices")]
+        [HttpGet("comparison")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetChangedPrices()
+        public async Task<IActionResult> GetComparison()
         {
             try
             {
-                var changedEntities = await _groceryService.GetChangedPricesAsync();
-                return Ok(changedEntities);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "A logical error occurred." });
-            }
-        }
-
-        [HttpGet("removed-entities")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetRemovedEntities()
-        {
-            try
-            {
-                var removedEntities = await _groceryService.GetRemovedEntitiesAsync();
-                return Ok(removedEntities);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "A logical error occurred." });
-            }
-        }
-
-        [HttpGet("added-entities")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAddedEntities()
-        {
-            try
-            {
-                var addedEntities = await _groceryService.GetAddedEntitiesAsync();
-                return Ok(addedEntities);
+                var comparisonResult = await _groceryService.GetComparisonAsync();
+                return Ok(comparisonResult);
             }
             catch (Exception ex)
             {
